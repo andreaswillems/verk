@@ -27,7 +27,8 @@ defmodule Verk.Mixfile do
   defp deps do
     [
       {:redix, "~> 0.8"},
-      {:jason, "~> 1.0"},
+      # {:jason, "~> 1.0"},
+      {:jsonrs, "0.1.5"},
       {:poolboy, "~> 1.5"},
       {:confex, "~> 3.3"},
       {:gen_stage, "~> 1.0"},

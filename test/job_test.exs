@@ -12,14 +12,14 @@ defmodule Verk.JobTest do
     }
     test "returns a valid json string" do
       result = Job.encode!(@job)
-      assert {:ok, _} = Jason.decode(result)
+      assert {:ok, _} = Jsonrs.decode(result)
     end
 
     test "includes original job info" do
       map =
         @job
         |> Job.encode!()
-        |> Jason.decode!()
+        |> Jsonrs.decode!()
 
       assert %{
                "queue" => "test_queue",
@@ -33,7 +33,7 @@ defmodule Verk.JobTest do
       map =
         @job
         |> Job.encode!()
-        |> Jason.decode!()
+        |> Jsonrs.decode!()
 
       assert Map.fetch(map, "original_json") == :error
     end
@@ -42,10 +42,10 @@ defmodule Verk.JobTest do
       map =
         @job
         |> Job.encode!()
-        |> Jason.decode!()
+        |> Jsonrs.decode!()
 
       assert is_binary(map["args"])
-      assert {:ok, _} = Jason.decode(map["args"])
+      assert {:ok, _} = Jsonrs.decode(map["args"])
     end
 
     test "Uses default options if none passed" do

@@ -47,16 +47,18 @@ defmodule Verk.Job do
     |> Map.take(Keyword.keys(@keys))
     # We wrap the args so there is no issue with cJson on Redis side
     # It's just an opaque string as far as Redis is concerned
-    |> Map.update!(:args, &Jason.encode!(&1))
-    |> Jason.encode!()
+    # |> Map.update!(:args, &Jason.encode!(&1))
+    # |> Jason.encode!()
+    |> Map.update!(:args, &Jsonrs.encode!(&1))
+    |> Jsonrs.encode!()
   end
 
   @doc """
   Decode the JSON payload storing the original json as part of the struct.
   """
-  @spec decode(binary) :: {:ok, %__MODULE__{}} | {:error, Jason.DecodeError.t()}
+  @spec decode(binary) :: {:ok, %__MODULE__{}} | {:error, Jsonrs.DecodeError.t()}
   def decode(payload) do
-    with {:ok, map} <- Jason.decode(payload),
+    with {:ok, map} <- Jsonrs.decode(payload),
          {:ok, args} <- unwrap_args(map["args"]) do
       fields =
         map
@@ -89,7 +91,7 @@ defmodule Verk.Job do
   end
 
   defp unwrap_args(wrapped_args) when is_binary(wrapped_args),
-    do: Jason.decode(wrapped_args, keys: Application.get_env(:verk, :args_keys, :strings))
+    do: Jsonrs.decode(wrapped_args, keys: Application.get_env(:verk, :args_keys, :strings))
 
   defp unwrap_args(args), do: {:ok, args}
 
